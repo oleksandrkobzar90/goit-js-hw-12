@@ -18,9 +18,6 @@ import errorIcon from './img/Error.svg';
 const form = document.querySelector('.form');
 const loadMoreBtn = document.querySelector('.load-more');
 
-// Приховати кнопку Load More
-hideLoadMoreButton();
-
 let query;
 let page = 1;
 const per_page = 15;
@@ -31,7 +28,7 @@ form.addEventListener('submit', async event => {
   event.preventDefault();
   const formData = new FormData(event.target);
   query = formData.get('search-text').trim();
-  // page = 1;
+  page = 1;
 
   // Перевірка на порожній пошуковий рядок
   if (!query) {
@@ -89,19 +86,12 @@ form.addEventListener('submit', async event => {
 });
 
 loadMoreBtn.addEventListener('click', async () => {
-  page += 1;
-  hideLoadMoreButton();
-  showLoader();
+  // Перевірка чи остання сторінка колекції.
+  if (page >= totalPages) return;
 
-  // Перевірка чи на останній сторінці колекції.
-  if (page === totalPages) {
-    hideLoader();
-    return iziToast.warning({
-      position: 'topRight',
-      message: `We're sorry, but you've reached the end of search results.`,
-      backgroundColor: '#43ef40',
-    });
-  }
+  page += 1;
+  showLoader();
+  hideLoadMoreButton();
 
   try {
     const data = await getImagesByQuery(query, page, per_page);
@@ -109,8 +99,25 @@ loadMoreBtn.addEventListener('click', async () => {
     createGallery(data.hits);
   } catch (err) {
     console.error(err);
+    iziToast.error({
+      position: 'topRight',
+      message: 'Something went wrong. Please try again later!',
+      backgroundColor: '#ef4040',
+      iconUrl: errorIcon,
+    });
   } finally {
     hideLoader();
     showLoadMoreButton();
+  }
+
+  // Перевірка чи на останній сторінці колекції.
+  if (page >= totalPages) {
+    iziToast.warning({
+      position: 'topRight',
+      message: `We're sorry, but you've reached the end of search results.`,
+      backgroundColor: '#e0ef40',
+    });
+    hideLoadMoreButton();
+    return;
   }
 });
