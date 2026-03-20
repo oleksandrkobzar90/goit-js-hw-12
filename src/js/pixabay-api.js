@@ -9,7 +9,8 @@ axios.defaults.params = {
   safesearch: true,
 };
 
-export async function getImagesByQuery(query, page, per_page) {
+export async function getImagesByQuery(query, page = 1, per_page = 15) {
+  per_page = per_page < 15 ? 15 : per_page;
   try {
     const res = await axios.get('', {
       params: { q: String(query), page: page, per_page: per_page },

@@ -60,8 +60,9 @@ export function createGallery(images) {
 export function appendGallery(images) {
   if (!gallery) return;
   gallery.insertAdjacentHTML('beforeend', createMarkup(images));
-
-  lightbox.refresh();
+  if (lightbox) {
+    lightbox.refresh();
+  }
 }
 
 // Очистка галереї перед створенням розмітки нових даних

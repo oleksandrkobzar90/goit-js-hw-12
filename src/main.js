@@ -145,7 +145,7 @@ function scrollPage() {
   const height = elem.getBoundingClientRect().height;
 
   window.scrollBy({
-    top: height * 2.2,
+    top: height * 2,
     behavior: 'smooth',
   });
 }
