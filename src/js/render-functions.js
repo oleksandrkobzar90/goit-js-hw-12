@@ -2,13 +2,13 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 let lightbox;
+const gallery = document.querySelector('.gallery');
+const loaderWrap = document.querySelector('.loader-wrap');
+const loadMore = document.querySelector('.load-more');
 
 // Створення розмітки галереї
-export function createGallery(images) {
-  const gallery = document.querySelector('.gallery');
-  if (!gallery) return;
-
-  const markup = images
+function createMarkup(images) {
+  return images
     .map(img => {
       const {
         webformatURL,
@@ -40,8 +40,11 @@ export function createGallery(images) {
 </li>`;
     })
     .join('');
+}
 
-  gallery.insertAdjacentHTML('beforeend', markup);
+export function createGallery(images) {
+  if (!gallery) return;
+  gallery.innerHTML = createMarkup(images);
 
   if (!lightbox) {
     lightbox = new SimpleLightbox('.gallery a', {
@@ -53,15 +56,21 @@ export function createGallery(images) {
   }
 }
 
+// Для Load More
+export function appendGallery(images) {
+  if (!gallery) return;
+  gallery.insertAdjacentHTML('beforeend', createMarkup(images));
+
+  lightbox.refresh();
+}
+
 // Очистка галереї перед створенням розмітки нових даних
 export function clearGallery() {
-  const gallery = document.querySelector('.gallery');
   if (gallery) gallery.innerHTML = '';
 }
 
 // Зявляється css-loader
 export function showLoader() {
-  const loaderWrap = document.querySelector('.loader-wrap');
   if (loaderWrap) {
     loaderWrap.classList.remove('is-hidden');
   }
@@ -69,21 +78,18 @@ export function showLoader() {
 
 // Прибирається css-loader
 export function hideLoader() {
-  const loaderWrap = document.querySelector('.loader-wrap');
   if (loaderWrap) {
     loaderWrap.classList.add('is-hidden');
   }
 }
 
 export function showLoadMoreButton() {
-  const loadMore = document.querySelector('.load-more');
   if (loadMore) {
     loadMore.classList.remove('is-hidden');
   }
 }
 
 export function hideLoadMoreButton() {
-  const loadMore = document.querySelector('.load-more');
   if (loadMore) {
     loadMore.classList.add('is-hidden');
   }

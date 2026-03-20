@@ -7,6 +7,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 import { getImagesByQuery } from './js/pixabay-api.js';
 import {
   createGallery,
+  appendGallery,
   clearGallery,
   showLoader,
   hideLoader,
@@ -69,6 +70,19 @@ form.addEventListener('submit', async event => {
 
     // Розмітка нових даних
     createGallery(data.hits);
+
+    // Показ кнопки тільки якщо є ще сторінки
+    if (totalPages > 1) {
+      showLoadMoreButton();
+    } else {
+      hideLoadMoreButton();
+
+      iziToast.warning({
+        position: 'topRight',
+        message: `We're sorry, but you've reached the end of search results.`,
+        backgroundColor: '#e0ef40',
+      });
+    }
   } catch (err) {
     console.error(err);
     return iziToast.error({
@@ -80,7 +94,6 @@ form.addEventListener('submit', async event => {
   } finally {
     hideLoader();
   }
-  showLoadMoreButton();
 
   event.target.reset();
 });
@@ -96,7 +109,19 @@ loadMoreBtn.addEventListener('click', async () => {
   try {
     const data = await getImagesByQuery(query, page, per_page);
     // Розмітка нових даних
-    createGallery(data.hits);
+    appendGallery(data.hits);
+
+    // Перевірка чи на останній сторінці колекції.
+    if (page >= totalPages) {
+      iziToast.warning({
+        position: 'topRight',
+        message: `We're sorry, but you've reached the end of search results.`,
+        backgroundColor: '#e0ef40',
+      });
+      hideLoadMoreButton();
+    } else {
+      showLoadMoreButton();
+    }
   } catch (err) {
     console.error(err);
     iziToast.error({
@@ -107,17 +132,5 @@ loadMoreBtn.addEventListener('click', async () => {
     });
   } finally {
     hideLoader();
-    showLoadMoreButton();
-  }
-
-  // Перевірка чи на останній сторінці колекції.
-  if (page >= totalPages) {
-    iziToast.warning({
-      position: 'topRight',
-      message: `We're sorry, but you've reached the end of search results.`,
-      backgroundColor: '#e0ef40',
-    });
-    hideLoadMoreButton();
-    return;
   }
 });
