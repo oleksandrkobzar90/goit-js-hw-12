@@ -17,6 +17,7 @@ import {
 import errorIcon from './img/Error.svg';
 
 const form = document.querySelector('.form');
+const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
 
 let query;
@@ -80,7 +81,7 @@ form.addEventListener('submit', async event => {
       iziToast.warning({
         position: 'topRight',
         message: `We're sorry, but you've reached the end of search results.`,
-        backgroundColor: '#e0ef40',
+        backgroundColor: '#96d4f8',
       });
     }
   } catch (err) {
@@ -111,12 +112,15 @@ loadMoreBtn.addEventListener('click', async () => {
     // Розмітка нових даних
     appendGallery(data.hits);
 
+    // Виклик функції scrollPage для планої прокрутки сторінки
+    scrollPage();
+
     // Перевірка чи на останній сторінці колекції.
     if (page >= totalPages) {
       iziToast.warning({
         position: 'topRight',
         message: `We're sorry, but you've reached the end of search results.`,
-        backgroundColor: '#e0ef40',
+        backgroundColor: '#96d4f8',
       });
       hideLoadMoreButton();
     } else {
@@ -134,3 +138,14 @@ loadMoreBtn.addEventListener('click', async () => {
     hideLoader();
   }
 });
+
+function scrollPage() {
+  const elem = gallery.lastElementChild;
+
+  const height = elem.getBoundingClientRect().height;
+
+  window.scrollBy({
+    top: height * 2.2,
+    behavior: 'smooth',
+  });
+}

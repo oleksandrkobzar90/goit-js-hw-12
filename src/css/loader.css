@@ -82,3 +82,19 @@
     transform: rotate(360deg);
   }
 }
+
+.load-more {
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  width: auto;
+  height: 40px;
+  background: #4e75ff;
+  margin: 0 auto;
+}
