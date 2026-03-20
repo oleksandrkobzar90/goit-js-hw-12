@@ -9,12 +9,14 @@ axios.defaults.params = {
   safesearch: true,
 };
 
-export function getImagesByQuery(query) {
-  return axios
-    .get('', { params: { q: String(query) } })
-    .then(res => res.data)
-    .catch(err => {
-      console.error(err);
-      throw err;
+export async function getImagesByQuery(query, page, per_page) {
+  try {
+    const res = await axios.get('', {
+      params: { q: String(query), page: page, per_page: per_page },
     });
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 }
