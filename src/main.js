@@ -22,7 +22,7 @@ const loadMoreBtn = document.querySelector('.load-more');
 hideLoadMoreButton();
 
 let query;
-let page = 32;
+let page = 1;
 const per_page = 15;
 let totalPages;
 
