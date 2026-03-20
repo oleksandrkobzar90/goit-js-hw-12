@@ -19,11 +19,18 @@ const form = document.querySelector('.form');
 form.addEventListener('submit', event => {
   event.preventDefault();
   const formData = new FormData(event.target);
-  const query = formData.get('search-text');
+  const query = formData.get('search-text').trim();
 
   // Перевірка на порожній пошуковий рядок
-  if (!query) return;
-
+  if (!query) {
+    iziToast.error({
+      position: 'topRight',
+      message: `Please enter a search term.`,
+      backgroundColor: '#ef4040',
+      iconUrl: errorIcon,
+    });
+    return;
+  }
   // Очистка галереї перед розміткою нових даних
   clearGallery();
 

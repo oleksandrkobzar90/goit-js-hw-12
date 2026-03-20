@@ -11,7 +11,10 @@ axios.defaults.params = {
 
 export function getImagesByQuery(query) {
   return axios
-    .get('', { params: { q: String(query).trim() } })
+    .get('', { params: { q: String(query) } })
     .then(res => res.data)
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err);
+      throw err;
+    });
 }
